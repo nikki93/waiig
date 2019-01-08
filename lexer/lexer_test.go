@@ -131,10 +131,10 @@ if (5 < 10) {
 		{token.EOF, ""},
 	}
 
-	lexer := New(input)
+	l := New(input)
 
 	for i, e := range expected {
-		tok := lexer.NextToken()
+		tok := l.NextToken()
 
 		if tok.Type != e.typ {
 			t.Fatalf("expected[%d] -- type wrong. expected=%q, got=%q", i, e.typ, tok.Type)
