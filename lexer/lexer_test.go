@@ -8,9 +8,9 @@ import (
 func TestNextToken(t *testing.T) {
 	input := `=+(){},;`
 
-	tests := []struct {
-		expectedType    token.TokenType
-		expectedLiteral string
+	expected := []struct {
+		typ     token.TokenType
+		literal string
 	}{
 		{token.ASSIGN, "="},
 		{token.PLUS, "+"},
@@ -25,15 +25,15 @@ func TestNextToken(t *testing.T) {
 
 	l := New(input)
 
-	for i, tt := range tests {
+	for i, e := range expected {
 		tok := l.NextToken()
 
-		if tok.Type != tt.expectedType {
-			t.Fatalf("tests[%d] -- type wrong. expected=%q, got=%q", i, tt.expectedType, tok.Type)
+		if tok.Type != e.typ {
+			t.Fatalf("tests[%d] -- type wrong. expected=%q, got=%q", i, e.typ, tok.Type)
 		}
 
-		if tok.Literal != tt.expectedLiteral {
-			t.Fatalf("tests[%d] -- literal wrong. expected=%q, got=%q", i, tt.expectedLiteral, tok.Literal)
+		if tok.Literal != e.literal {
+			t.Fatalf("tests[%d] -- literal wrong. expected=%q, got=%q", i, e.literal, tok.Literal)
 		}
 	}
 }
