@@ -6,34 +6,75 @@ import (
 )
 
 func TestNextToken(t *testing.T) {
-	input := `=+(){},;`
+	input := `
+let five = 5;
+let ten = 10;
+
+let add = fn(x, y) {
+  x + y;
+};
+
+let result = add(five, ten);
+`
 
 	expected := []struct {
 		typ     token.TokenType
 		literal string
 	}{
+		{token.LET, "let"},
+		{token.IDENT, "five"},
 		{token.ASSIGN, "="},
-		{token.PLUS, "+"},
+		{token.INT, "5"},
+		{token.SEMICOLON, ";"},
+
+		{token.LET, "let"},
+		{token.IDENT, "ten"},
+		{token.ASSIGN, "="},
+		{token.INT, "10"},
+		{token.SEMICOLON, ";"},
+
+		{token.LET, "let"},
+		{token.IDENT, "add"},
+		{token.ASSIGN, "="},
+		{token.FUNCTION, "fn"},
 		{token.LPAREN, "("},
+		{token.IDENT, "x"},
+		{token.COMMA, ","},
+		{token.IDENT, "y"},
 		{token.RPAREN, ")"},
 		{token.LBRACE, "{"},
-		{token.RBRACE, "}"},
-		{token.COMMA, ","},
+		{token.IDENT, "x"},
+		{token.PLUS, "+"},
+		{token.IDENT, "y"},
 		{token.SEMICOLON, ";"},
+		{token.RBRACE, "}"},
+		{token.SEMICOLON, ";"},
+
+		{token.LET, "let"},
+		{token.IDENT, "result"},
+		{token.ASSIGN, "="},
+		{token.IDENT, "add"},
+		{token.LPAREN, "("},
+		{token.IDENT, "five"},
+		{token.COMMA, ","},
+		{token.IDENT, "ten"},
+		{token.RPAREN, ")"},
+		{token.SEMICOLON, ";"},
+
 		{token.EOF, ""},
 	}
 
-	l := New(input)
+	lexer := New(input)
 
 	for i, e := range expected {
-		tok := l.NextToken()
+		tok := lexer.NextToken()
 
 		if tok.Type != e.typ {
-			t.Fatalf("tests[%d] -- type wrong. expected=%q, got=%q", i, e.typ, tok.Type)
+			t.Fatalf("expected[%d] -- type wrong. expected=%q, got=%q", i, e.typ, tok.Type)
 		}
 
 		if tok.Literal != e.literal {
-			t.Fatalf("tests[%d] -- literal wrong. expected=%q, got=%q", i, e.literal, tok.Literal)
+			t.Fatalf("expected[%d] -- literal wrong. expected=%q, got=%q", i, e.literal, tok.Literal)
 		}
 	}
 }
